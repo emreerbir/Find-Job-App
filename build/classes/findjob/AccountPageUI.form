@@ -1015,6 +1015,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Sil"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sil_certActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="sil_app">
                   <Properties>

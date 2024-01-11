@@ -213,11 +213,11 @@ public class Education {
         }
     }
 
-    void removeEdu(Connection conn, int userId) {
+    void removeEdu(Connection conn, int eduId) {
         String sql = "DELETE from education where id=?";
         
         try(PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(1, eduId);
             
             preparedStatement.executeUpdate();
         }catch(SQLException e){

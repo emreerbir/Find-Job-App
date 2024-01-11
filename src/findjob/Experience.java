@@ -289,6 +289,19 @@ public class Experience {
             throw new RuntimeException("Eğitim bilgisi eklenirken bir hata oluştu.");
         }
     }
+
+    void removeExp(Connection conn, int expId) {
+        String sql = "DELETE from experience where id=?";
+        
+        try(PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1,expId);
+            
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();;
+            throw new RuntimeException("Silinirken hata meydana geldi!");
+        }
+    }
     
     
     

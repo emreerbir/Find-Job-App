@@ -259,5 +259,18 @@ public class Certificate {
             throw new RuntimeException("Eğitim bilgisi eklenirken bir hata oluştu.");
         }
     }
+
+    void removeCert(Connection conn, int certId) {
+        String sql = "DELETE from certificate where id=?";
+        
+        try(PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1,certId);
+            
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();;
+            throw new RuntimeException("Silinirken hata meydana geldi!");
+        }
+    }
       
 }

@@ -87,18 +87,15 @@ public class AccountPageUI extends javax.swing.JFrame {
         
     }
     int getEduId(int rowId){
-        System.out.println("testete" + educationList.get(rowId).getId());
-            return educationList.get(rowId).getId();
+        return educationList.get(rowId).getId();
             
     }
     
     int getExpId(int rowId){
-        System.out.println("testete" + educationList.get(rowId).getId());
         return experienceList.get(rowId).getId();
     }
     
     int getCertId(int rowId){
-        System.out.println("testete" + certificateList.get(rowId).getId());
         return certificateList.get(rowId).getId();
     }
     
@@ -649,6 +646,11 @@ public class AccountPageUI extends javax.swing.JFrame {
         sil_cert.setBackground(new java.awt.Color(231, 231, 231));
         sil_cert.setForeground(new java.awt.Color(118, 179, 157));
         sil_cert.setText("Sil");
+        sil_cert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sil_certActionPerformed(evt);
+            }
+        });
 
         sil_app.setBackground(new java.awt.Color(231, 231, 231));
         sil_app.setForeground(new java.awt.Color(118, 179, 157));
@@ -794,7 +796,7 @@ public class AccountPageUI extends javax.swing.JFrame {
 
     private void eduEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eduEditButtonActionPerformed
         // TODO add your handling code here:
-        
+        error_text.setText("");
         DefaultTableModel educationTable =(DefaultTableModel) eduTable.getModel();
         
         int secili_row = eduTable.getSelectedRow();
@@ -806,7 +808,6 @@ public class AccountPageUI extends javax.swing.JFrame {
                 error_text.setText("Lutfen guncellenececk bir urun secin!");
             }
         }else{
-     
             java.util.Date startDateUtil = start_date_edu.getDate();
             java.sql.Date startDateSql = new java.sql.Date(startDateUtil.getTime());
 
@@ -831,7 +832,7 @@ public class AccountPageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_nameFieldActionPerformed
 
     private void expEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expEditButtonActionPerformed
-
+        error_text.setText("");
         DefaultTableModel experienceTable =(DefaultTableModel) expTable.getModel();
         
         int secili_row = expTable.getSelectedRow();
@@ -864,7 +865,7 @@ public class AccountPageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_expEditButtonActionPerformed
 
     private void certEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_certEditButtonActionPerformed
-        
+        error_text.setText(" ");
         DefaultTableModel certificateTable =(DefaultTableModel) certTable.getModel();
         
         int secili_row = certTable.getSelectedRow();
@@ -915,7 +916,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             tmp = new Education(currentUser.getId(), uni_name_edu.getText(), dep_name_edu.getText(), Double.parseDouble(gpa_edu.getText()), startDateSql, endDateSql);
             
             education.addEducation(conn, currentUser.getId(), tmp);
-            
+            error_text.setText("Eğitim bilgisi başarıyla eklendi!");
         }
         
        
@@ -1093,7 +1094,7 @@ public class AccountPageUI extends javax.swing.JFrame {
         
         if(secili_row == -1){
             if(expTable.getRowCount() == 0){
-                error_text.setText("Eğitim bilgisi şu anda boş!");
+                error_text.setText("Deneyim tablosu şu anda boş!");
             }else{
                 error_text.setText("Lutfen silinecek bir satır seçiniz!");
             }
@@ -1102,10 +1103,31 @@ public class AccountPageUI extends javax.swing.JFrame {
             experienceTable.removeRow(secili_row);
            
             
-            education.removeEdu(conn, getEduId(secili_row));
+            experience.removeExp(conn, getExpId(secili_row));
         }
         
     }//GEN-LAST:event_sil_expActionPerformed
+
+    private void sil_certActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sil_certActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel certificateTable =(DefaultTableModel) certTable.getModel();
+        
+        int secili_row = certTable.getSelectedRow();
+        
+        if(secili_row == -1){
+            if(certTable.getRowCount() == 0){
+                error_text.setText("Deneyim tablosu şu anda boş!");
+            }else{
+                error_text.setText("Lutfen silinecek bir satır seçiniz!");
+            }
+        }else{
+            
+            certificateTable.removeRow(secili_row);
+           
+            System.out.println("silinmek icin gelen cert ıd: "+getCertId(secili_row));
+            certificate.removeCert(conn, getCertId(secili_row));
+        }
+    }//GEN-LAST:event_sil_certActionPerformed
 
     /**
      * @param args the command line arguments
