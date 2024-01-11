@@ -13,7 +13,7 @@ public class FindJob {
         String url, user, pass;
         url = "jdbc:postgresql://localhost:5432/find_job_db";
         user = "postgres";
-        pass = "1q2w3e";
+        pass = "123";
        Connection conn = DriverManager.getConnection(url, user, pass);  
         
         LoginUI loginPage = new LoginUI(conn);
