@@ -79,7 +79,6 @@ public class AccountPageUI extends javax.swing.JFrame {
         //appList = new ArrayList<>();
         
         
-        
 //        experience = experience.getExperienceDetails(conn, currentUser.getId(), experience);
 //        setExperienceFields();
 //        
@@ -205,6 +204,10 @@ public class AccountPageUI extends javax.swing.JFrame {
         certAddButton = new javax.swing.JButton();
         certEditButton = new javax.swing.JButton();
         error_text = new javax.swing.JLabel();
+        sil_edu = new javax.swing.JButton();
+        sil_exp = new javax.swing.JButton();
+        sil_cert = new javax.swing.JButton();
+        sil_app = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -267,6 +270,7 @@ public class AccountPageUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        eduTable.setRowSelectionAllowed(true);
         eduTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eduTableMouseClicked(evt);
@@ -624,6 +628,32 @@ public class AccountPageUI extends javax.swing.JFrame {
         error_text.setText("jLabel1");
         error_text.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        sil_edu.setBackground(new java.awt.Color(231, 231, 231));
+        sil_edu.setForeground(new java.awt.Color(118, 179, 157));
+        sil_edu.setText("Sil");
+        sil_edu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sil_eduActionPerformed(evt);
+            }
+        });
+
+        sil_exp.setBackground(new java.awt.Color(231, 231, 231));
+        sil_exp.setForeground(new java.awt.Color(118, 179, 157));
+        sil_exp.setText("Sil");
+        sil_exp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sil_expActionPerformed(evt);
+            }
+        });
+
+        sil_cert.setBackground(new java.awt.Color(231, 231, 231));
+        sil_cert.setForeground(new java.awt.Color(118, 179, 157));
+        sil_cert.setText("Sil");
+
+        sil_app.setBackground(new java.awt.Color(231, 231, 231));
+        sil_app.setForeground(new java.awt.Color(118, 179, 157));
+        sil_app.setText("Geri Çek");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -660,7 +690,11 @@ public class AccountPageUI extends javax.swing.JFrame {
                             .addComponent(expEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(certEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(expAddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(certAddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(certAddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sil_exp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sil_edu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sil_cert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sil_app, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel4Layout.setVerticalGroup(
@@ -678,7 +712,9 @@ public class AccountPageUI extends javax.swing.JFrame {
                         .addComponent(educationLabel)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(104, 104, 104)
+                                .addGap(75, 75, 75)
+                                .addComponent(sil_edu)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(eduEditButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(eduAddButton))
@@ -690,6 +726,8 @@ public class AccountPageUI extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sil_exp)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(expEditButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(expAddButton)
@@ -703,13 +741,20 @@ public class AccountPageUI extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(certifPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(sil_cert)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(certEditButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(certAddButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(appLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(appPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(appPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addComponent(sil_app))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(error_text)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -1018,6 +1063,50 @@ public class AccountPageUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_certTableMouseClicked
 
+    private void sil_eduActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sil_eduActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel educationTable =(DefaultTableModel) eduTable.getModel();
+        
+        int secili_row = eduTable.getSelectedRow();
+        
+        if(secili_row == -1){
+            if(eduTable.getRowCount() == 0){
+                error_text.setText("Eğitim bilgisi şu anda boş!");
+            }else{
+                error_text.setText("Lutfen silinecek bir satır seçiniz!");
+            }
+        }else{
+            
+            educationTable.removeRow(secili_row);
+           
+            
+            education.removeEdu(conn, getEduId(secili_row));
+        }
+        
+    }//GEN-LAST:event_sil_eduActionPerformed
+
+    private void sil_expActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sil_expActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel experienceTable =(DefaultTableModel) expTable.getModel();
+        
+        int secili_row = expTable.getSelectedRow();
+        
+        if(secili_row == -1){
+            if(expTable.getRowCount() == 0){
+                error_text.setText("Eğitim bilgisi şu anda boş!");
+            }else{
+                error_text.setText("Lutfen silinecek bir satır seçiniz!");
+            }
+        }else{
+            
+            experienceTable.removeRow(secili_row);
+           
+            
+            education.removeEdu(conn, getEduId(secili_row));
+        }
+        
+    }//GEN-LAST:event_sil_expActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1097,6 +1186,10 @@ public class AccountPageUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField job_name_exp;
     private javax.swing.JTextField nameField;
+    private javax.swing.JButton sil_app;
+    private javax.swing.JButton sil_cert;
+    private javax.swing.JButton sil_edu;
+    private javax.swing.JButton sil_exp;
     private com.toedter.calendar.JDateChooser start_date_edu;
     private com.toedter.calendar.JDateChooser start_date_exp;
     private javax.swing.JTextField uni_name_edu;

@@ -213,4 +213,17 @@ public class Education {
         }
     }
 
+    void removeEdu(Connection conn, int userId) {
+        String sql = "DELETE from education where id=?";
+        
+        try(PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1, userId);
+            
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();;
+            throw new RuntimeException("Silinirken hata meydana geldi!");
+        }
+    }
+
 }

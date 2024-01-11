@@ -109,13 +109,17 @@
                                   <Component id="eduAddButton" pref="75" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="287" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="eduEditButton" max="32767" attributes="0"/>
                                       <Component id="expEditButton" max="32767" attributes="0"/>
                                       <Component id="certEditButton" max="32767" attributes="0"/>
                                       <Component id="expAddButton" alignment="0" max="32767" attributes="0"/>
                                       <Component id="certAddButton" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="sil_exp" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="sil_edu" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="sil_cert" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="sil_app" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
@@ -139,7 +143,9 @@
                                   <Component id="educationLabel" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                                          <Component id="sil_edu" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
                                           <Component id="eduEditButton" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="eduAddButton" min="-2" max="-2" attributes="0"/>
@@ -154,6 +160,8 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="sil_exp" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
                                           <Component id="expEditButton" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="expAddButton" min="-2" max="-2" attributes="0"/>
@@ -170,6 +178,8 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="certifPanel" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" attributes="0">
+                                          <Component id="sil_cert" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
                                           <Component id="certEditButton" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="certAddButton" min="-2" max="-2" attributes="0"/>
@@ -177,8 +187,16 @@
                                   </Group>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Component id="appLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="appPanel" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="appPanel" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                          <Component id="sil_app" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="error_text" min="-2" max="-2" attributes="0"/>
@@ -351,6 +369,7 @@
                                 </Column>
                               </TableColumnModel>
                             </Property>
+                            <Property name="rowSelectionAllowed" type="boolean" value="true"/>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
@@ -956,6 +975,56 @@
                     <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                       <Color id="Default Cursor"/>
                     </Property>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="sil_edu">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="e7" green="e7" red="e7" type="rgb"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="9d" green="b3" red="76" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Sil"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sil_eduActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="sil_exp">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="e7" green="e7" red="e7" type="rgb"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="9d" green="b3" red="76" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Sil"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sil_expActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="sil_cert">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="e7" green="e7" red="e7" type="rgb"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="9d" green="b3" red="76" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Sil"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="sil_app">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="e7" green="e7" red="e7" type="rgb"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="9d" green="b3" red="76" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Geri &#xc7;ek"/>
                   </Properties>
                 </Component>
               </SubComponents>
