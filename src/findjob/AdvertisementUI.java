@@ -3,10 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package findjob;
+import java.awt.GridLayout;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author BusraGural
@@ -15,30 +26,38 @@ public class AdvertisementUI extends javax.swing.JFrame {
     
     private Connection conn;
     Advertisement adv = new Advertisement();
-    ArrayList<Advertisement> jobAdvertisements;
+    ArrayList<Advertisement> filteredAdvertisements;
+    private DefaultTableModel advJobTableModel;
+    User currentUser;
+    
+    Application appliedAdvertisement = new Application();
+
     /**
      * Creates new form AdvertisementUI
      */
     public AdvertisementUI(Connection conn) {
-        this.jobAdvertisements = new ArrayList<>();
+        filteredAdvertisements = new  ArrayList<>();
+        currentUser = LoginUI.currentUser;
+        currentUser = currentUser.fetchUserDetails(conn, currentUser.getUsername());
+        System.out.println("name in advui " + currentUser.getUsername());
+        System.out.println("id in advui " + currentUser.getId());
         this.conn = conn;
         initComponents();
         Helpers.disableTextFields(jPanel1);
         Helpers.enableTextFields(imagePanel);
-        //jobAdv = jobAdv.getJobAdvertisementDetails(conn, jobAdv);
-        jobAdvertisements = adv.getAllJobAdvertisements(conn);
-        setjobAdvertisementFields();
+        Helpers.disableTableFields(advTable);
         
+        advJobTableModel = new DefaultTableModel(new Object[]{"İlan Adı", "Kurum Adı", "Konum", "Bitiş Tarihi", "Başvuran Sayısı"}, 0);
+        advTable.setModel(advJobTableModel);
         
-    }
-    
-    
-    void setjobAdvertisementFields(){
+        filteredAdvertisements = adv.getAllJobAdvertisements(conn);
+        setjobAdvertisementFields(filteredAdvertisements);
+        
+        //courseAdvertisements = adv.getAllCourseAdvertisements(conn);
        
-        
-        
     }
-
+    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,6 +67,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
@@ -57,11 +77,13 @@ public class AdvertisementUI extends javax.swing.JFrame {
         locationLabel = new javax.swing.JLabel();
         locationBox = new javax.swing.JComboBox<>();
         typeBox = new javax.swing.JComboBox<>();
-        locationLabel1 = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
         companyLabel = new javax.swing.JLabel();
         companyNameBox = new javax.swing.JComboBox<>();
         searchField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
+        workingTypeLabel = new javax.swing.JLabel();
+        workTypeBox = new javax.swing.JComboBox<>();
         nameLabel = new javax.swing.JLabel();
         jobAdvPanel = new javax.swing.JPanel();
         submitButton = new javax.swing.JButton();
@@ -84,12 +106,24 @@ public class AdvertisementUI extends javax.swing.JFrame {
         imagePanel.setBackground(new java.awt.Color(118, 179, 157));
 
         jobAdvButton.setBackground(new java.awt.Color(118, 179, 157));
+        buttonGroup2.add(jobAdvButton);
         jobAdvButton.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jobAdvButton.setText("İş İlanları");
+        jobAdvButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jobAdvButtonActionPerformed(evt);
+            }
+        });
 
         courseAdvButton.setBackground(new java.awt.Color(118, 179, 157));
+        buttonGroup2.add(courseAdvButton);
         courseAdvButton.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         courseAdvButton.setText("Kurs İlanları");
+        courseAdvButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                courseAdvButtonActionPerformed(evt);
+            }
+        });
 
         locationLabel.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         locationLabel.setText("Konum");
@@ -97,15 +131,15 @@ public class AdvertisementUI extends javax.swing.JFrame {
         locationBox.setBackground(new java.awt.Color(221, 221, 221));
         locationBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         locationBox.setForeground(new java.awt.Color(118, 179, 157));
-        locationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "İstanbul", "Ankara", "Kayseri", "Çorum" }));
+        locationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "İstanbul", "Ankara", "Kayseri", "Çorum", " " }));
 
         typeBox.setBackground(new java.awt.Color(221, 221, 221));
         typeBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         typeBox.setForeground(new java.awt.Color(118, 179, 157));
-        typeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tam Zamanlı", "Yarı Zamanlı", "Stajyer", " " }));
+        typeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "Tam Zamanlı", "Yarı Zamanlı", "Stajyer", " " }));
 
-        locationLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        locationLabel1.setText("Job Type");
+        typeLabel.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        typeLabel.setText("Tür");
 
         companyLabel.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         companyLabel.setText("Kurum");
@@ -113,7 +147,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         companyNameBox.setBackground(new java.awt.Color(221, 221, 221));
         companyNameBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         companyNameBox.setForeground(new java.awt.Color(118, 179, 157));
-        companyNameBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monster" }));
+        companyNameBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "Monster", "Company4", " " }));
 
         searchField.setBackground(new java.awt.Color(231, 231, 231));
         searchField.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
@@ -130,52 +164,73 @@ public class AdvertisementUI extends javax.swing.JFrame {
             }
         });
 
+        workingTypeLabel.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        workingTypeLabel.setText("Çalışma Şekli");
+
+        workTypeBox.setBackground(new java.awt.Color(221, 221, 221));
+        workTypeBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        workTypeBox.setForeground(new java.awt.Color(118, 179, 157));
+        workTypeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "Remote", "Hibrit", "Yüzyüze", " " }));
+
         javax.swing.GroupLayout imagePanelLayout = new javax.swing.GroupLayout(imagePanel);
         imagePanel.setLayout(imagePanelLayout);
         imagePanelLayout.setHorizontalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(searchField)
+                .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(imagePanelLayout.createSequentialGroup()
-                        .addComponent(jobAdvButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(courseAdvButton)
-                        .addGap(18, 18, 18)
+                        .addGap(23, 23, 23)
                         .addComponent(locationLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(locationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(locationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
+                        .addComponent(typeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(imagePanelLayout.createSequentialGroup()
-                        .addComponent(locationLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(companyLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(companyNameBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(companyNameBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(workingTypeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(workTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(imagePanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(searchButton)
+                        .addGap(150, 150, 150)
+                        .addComponent(jobAdvButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(courseAdvButton)))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
         imagePanelLayout.setVerticalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jobAdvButton)
+                        .addComponent(courseAdvButton))
+                    .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jobAdvButton)
-                    .addComponent(courseAdvButton)
-                    .addComponent(locationLabel)
-                    .addComponent(locationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(companyLabel)
-                    .addComponent(companyNameBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(locationLabel1)
-                    .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(companyLabel)
+                        .addComponent(companyNameBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(workingTypeLabel)
+                        .addComponent(workTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(locationLabel)
+                        .addComponent(locationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(typeLabel)
+                        .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -191,6 +246,11 @@ public class AdvertisementUI extends javax.swing.JFrame {
         submitButton.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         submitButton.setForeground(new java.awt.Color(234, 231, 231));
         submitButton.setText("Başvur");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
         advTable.setBackground(new java.awt.Color(234, 231, 231));
         advTable.setForeground(new java.awt.Color(40, 55, 57));
@@ -219,6 +279,11 @@ public class AdvertisementUI extends javax.swing.JFrame {
         detailButton.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         detailButton.setForeground(new java.awt.Color(234, 231, 231));
         detailButton.setText("Detay");
+        detailButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detailButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jobAdvPanelLayout = new javax.swing.GroupLayout(jobAdvPanel);
         jobAdvPanel.setLayout(jobAdvPanelLayout);
@@ -229,7 +294,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
                 .addComponent(detailButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
             .addGroup(jobAdvPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2)
@@ -374,14 +439,235 @@ public class AdvertisementUI extends javax.swing.JFrame {
         new AccountPageUI(conn).setVisible(true);
     }//GEN-LAST:event_homeBttnActionPerformed
 
+    void setjobAdvertisementFields(ArrayList<Advertisement> jobAdvertisements) {
+        advJobTableModel.setRowCount(0);
+        for (Advertisement adv : jobAdvertisements) {
+            String name ="";
+            try {
+                name = adv.getCompanyNameById(conn, adv.getCompanyId());
+            } catch (SQLException ex) {
+                Logger.getLogger(AdvertisementUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Object[] row = {
+                    adv.getTitle(),
+                    name, // Assuming there is a method like getCompanyName() in Advertisement class
+                    adv.getLocation(),
+                    adv.getDeadlineDate(), // Assuming getDeadlineDate() returns a formatted date
+                    adv.getAppliedCount()
+            };
+            advJobTableModel.addRow(row);
+        }
+
+        advTable.setModel(advJobTableModel);
+    }
+    
+    private void handleFilterSubmission() {
+        boolean advSelected = true;
+
+                if (jobAdvButton.isSelected()) {
+                    advSelected = true;
+                    System.out.println("Job Advertisement seçildi.");
+                } else if (courseAdvButton.isSelected()) {
+                    advSelected = false;
+                    System.out.println("Course Advertisement seçildi.");
+                } else {
+                    System.out.println("Hiçbiri seçilmedi.");
+                }
+
+                String selectedLocation = (String) locationBox.getSelectedItem();
+                System.out.println(selectedLocation);
+                String selectedType= (String) typeBox.getSelectedItem();
+                System.out.println(selectedType);
+                String selectedCompany= (String) companyNameBox.getSelectedItem();
+                System.out.println(selectedCompany);
+
+
+                int id = 0;
+                try {
+                    id = adv.getCompanyIdByName(conn, selectedCompany);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdvertisementUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                String selectedWorkType = (String) workTypeBox.getSelectedItem();
+                System.out.println(selectedWorkType);
+
+
+                if(selectedCompany.compareTo("Hepsi") == 0 && selectedLocation.compareTo("Hepsi") == 0  && selectedType.compareTo("Hepsi") == 0 ){
+                    if(advSelected ){
+                        filteredAdvertisements = adv.getAllJobAdvertisements(conn);
+                        setjobAdvertisementFields(filteredAdvertisements);
+
+                    }
+                    else{
+                        filteredAdvertisements = adv.getAllCourseAdvertisements(conn);
+                        setjobAdvertisementFields(filteredAdvertisements);
+                    }
+                }
+                else{
+                    if (id == -1) {
+                        id = 0;
+                    }
+                    if ("Hepsi".equals(selectedLocation)) {
+                        selectedLocation = null;
+                    }
+
+                    if ("Hepsi".equals(selectedType)) {
+                        selectedType = null;
+                    }
+                    if("Hepsi".equals(selectedWorkType)){
+                        selectedWorkType = null;
+                    }
+
+
+                    filteredAdvertisements = adv.getFilteredAdvertisements(conn, advSelected, selectedLocation, selectedType, id, selectedWorkType);
+                    setjobAdvertisementFields(filteredAdvertisements);
+                }
+    }   
     private void submitFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitFilterButtonActionPerformed
         // TODO add your handling code here:
+        handleFilterSubmission();
+        
     }//GEN-LAST:event_submitFilterButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
+        String searchKey = searchField.getText();
+        boolean selectedAdv;
+        
+        if (courseAdvButton.isSelected()) {
+            selectedAdv = false;
+        }
+        else{
+            selectedAdv = true;
+        }
+        
+        ArrayList<Advertisement> searchedAdv = new  ArrayList<>();
+        searchedAdv = adv.searchFilter(conn, searchKey, selectedAdv);
+        
+        setjobAdvertisementFields(searchedAdv);
+        
     }//GEN-LAST:event_searchButtonActionPerformed
 
+    private void jobAdvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobAdvButtonActionPerformed
+        // TODO add your handling code here:
+        String[] newItems = {"Hepsi","Tam Zamanlı", "Yarı Zamanlı", "Stajyer"};
+        typeBox.setModel(new DefaultComboBoxModel<>(newItems));
+         workTypeBox.setEnabled(true);
+    }//GEN-LAST:event_jobAdvButtonActionPerformed
+
+    private void courseAdvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseAdvButtonActionPerformed
+        // TODO add your handling code here:
+        String[] newItems = {"Hepsi","Online", "Yüzyüze"};
+        typeBox.setModel(new DefaultComboBoxModel<>(newItems));
+        workTypeBox.setEnabled(false);
+        
+        
+    }//GEN-LAST:event_courseAdvButtonActionPerformed
+
+    private void detailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailButtonActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = advTable.getSelectedRow();
+
+        // Ensure a row is selected
+        if (selectedRow >= 0 ) {
+            Advertisement selectedAdvertisement;
+            // Get the Advertisement object from the selected row
+            
+            selectedAdvertisement = filteredAdvertisements.get(selectedRow);
+   
+            // Show the details dialog
+            showDetailDialog(selectedAdvertisement);
+        } else {
+            // No row is selected, you may want to handle this case (show an error message, for example)
+            System.out.println("No row selected.");
+        }
+    }//GEN-LAST:event_detailButtonActionPerformed
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = advTable.getSelectedRow();
+        if(selectedRow >=0){
+            
+            Advertisement selectedAdvertisement;
+           
+            selectedAdvertisement = filteredAdvertisements.get(selectedRow);   
+            System.out.println("title: " + selectedAdvertisement.getTitle());
+            try {
+                appliedAdvertisement.applyAdvertisement(conn, selectedAdvertisement, currentUser.getId());
+                String message = "Başvuru yapıldı.";
+                JOptionPane.showMessageDialog(this, message);
+            } catch (Exception e) {
+                String message = "Bu ilana daha önce başvurdun";
+                JOptionPane.showMessageDialog(this, message);
+            }
+            
+            
+           handleFilterSubmission();
+            
+        }
+        
+        
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+  
+    private void showDetailDialog(Advertisement adv) {
+        JDialog detailDialog = new JDialog(new JFrame(), "Advertisement Details", true);
+        detailDialog.setSize(600, 400);
+
+        JPanel detailPanel = new JPanel(new GridLayout(8, 2, 10, 10));
+        detailPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    //    detailPanel.add(new JLabel("Departman:"));
+    //    detailPanel.add(new JLabel(adv.getDepartment()));
+
+        detailPanel.add(new JLabel("İlan Adı:"));
+        detailPanel.add(new JLabel(adv.getTitle()));
+
+        detailPanel.add(new JLabel("Kurum Adı:"));
+        try {
+            String companyName = adv.getCompanyNameById(conn, adv.getCompanyId());
+            detailPanel.add(new JLabel(companyName));
+        } catch (SQLException ex) {
+            detailPanel.add(new JLabel("Hata: " + ex.getMessage()));
+        }
+
+
+        JLabel descriptionLabel = new JLabel("Açıklama:");
+        JTextArea descriptionTextArea = new JTextArea(adv.getDescription());
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setFocusable(false);
+        JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        detailPanel.add(descriptionLabel);
+        detailPanel.add(descriptionScrollPane);
+        
+        
+        detailPanel.add(new JLabel("Konum:"));
+        detailPanel.add(new JLabel(adv.getLocation()));
+
+
+        detailPanel.add(new JLabel("İlan Açılış Tarihi:"));
+        detailPanel.add(new JLabel(adv.getOpenDate().toString()));
+
+        detailPanel.add(new JLabel("Bitiş Tarihi:"));
+        detailPanel.add(new JLabel(adv.getDeadlineDate().toString()));
+
+        if(adv.getWorkingModel() != null){
+            detailPanel.add(new JLabel("Çalışma Modeli:"));
+            detailPanel.add(new JLabel(adv.getWorkingModel()));
+        }
+        
+        detailPanel.add(new JLabel("Tipi:"));
+        detailPanel.add(new JLabel(adv.getType()));
+        
+
+        detailDialog.add(detailPanel);
+        detailDialog.setLocationRelativeTo(null);
+        detailDialog.setVisible(true);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -409,6 +695,12 @@ public class AdvertisementUI extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -421,6 +713,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advTable;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JLabel companyLabel;
     private javax.swing.JComboBox<String> companyNameBox;
     private javax.swing.JRadioButton courseAdvButton;
@@ -437,12 +730,14 @@ public class AdvertisementUI extends javax.swing.JFrame {
     private javax.swing.JPanel jobAdvPanel;
     private javax.swing.JComboBox<String> locationBox;
     private javax.swing.JLabel locationLabel;
-    private javax.swing.JLabel locationLabel1;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchField;
     private javax.swing.JButton submitButton;
     private javax.swing.JButton submitFilterButton;
     private javax.swing.JComboBox<String> typeBox;
+    private javax.swing.JLabel typeLabel;
+    private javax.swing.JComboBox<String> workTypeBox;
+    private javax.swing.JLabel workingTypeLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -28,22 +28,27 @@ public class AccountPageUI extends javax.swing.JFrame {
     Education education = new Education();
     Experience experience = new Experience();
     Certificate certificate = new Certificate();
+    Application application = new Application();
+    Advertisement advertisement = new Advertisement();
     ArrayList<Education> educationList;
     ArrayList<Experience> experienceList;
     ArrayList<Certificate> certificateList;
+    ArrayList<Application> applicationList;
+    ArrayList<Advertisement> advertisementList;
     //ArrayList<Education> educationList;
     private boolean edit = false;
     private DefaultTableModel educationTableModel;
     private DefaultTableModel experienceTableModel;
     private DefaultTableModel certificateTableModel;
-    private DefaultTableModel applicationTable;
+    private DefaultTableModel applicationTableModel;
+    int isSayisi=0;
+    int kursSayisi=0;
     
     /**
      * Creates new form AccountPageUI
      */
     public AccountPageUI(Connection conn) {
         this.conn = conn;
-        
         
         
         currentUser = LoginUI.currentUser;
@@ -76,8 +81,26 @@ public class AccountPageUI extends javax.swing.JFrame {
         certificateList = certificate.getCertificateList(conn, currentUser.getId());
         setCertificateFields(certificateList);
         
-        //appList = new ArrayList<>();
+        advertisementList = new ArrayList<>();
         
+        applicationList = new ArrayList<>();
+        applicationTableModel = (DefaultTableModel) appTable.getModel();
+        applicationList = application.getAppAdv(conn, currentUser.getId());
+        
+        advertisementList = advertisement.getAdvertisementById(conn, applicationList);
+        setApplicationsFields(advertisementList, applicationList);
+
+        //isSayisi=0, kursSayisi=0;
+        for(Advertisement adv: advertisementList){
+            if(adv.isIsJob()){
+                isSayisi++;
+            }else{
+                kursSayisi++;
+            }
+        }
+        
+        appl_info.setText(String.format("Başvurulan iş sayısı: %d Başvurulan kurs sayısı: %d", isSayisi, kursSayisi));
+        error_text.setText(" ");
         
 //        experience = experience.getExperienceDetails(conn, currentUser.getId(), experience);
 //        setExperienceFields();
@@ -86,6 +109,8 @@ public class AccountPageUI extends javax.swing.JFrame {
 //        setCertificateFields();
         
     }
+    
+    
     int getEduId(int rowId){
         return educationList.get(rowId).getId();
             
@@ -97,6 +122,10 @@ public class AccountPageUI extends javax.swing.JFrame {
     
     int getCertId(int rowId){
         return certificateList.get(rowId).getId();
+    }
+    
+    int getAppId(int rowId){
+        return applicationList.get(rowId).getId();
     }
     
     private void setEducationFields(ArrayList<Education> educationList){
@@ -205,6 +234,7 @@ public class AccountPageUI extends javax.swing.JFrame {
         sil_exp = new javax.swing.JButton();
         sil_cert = new javax.swing.JButton();
         sil_app = new javax.swing.JButton();
+        appl_info = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -267,7 +297,6 @@ public class AccountPageUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        eduTable.setRowSelectionAllowed(true);
         eduTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eduTableMouseClicked(evt);
@@ -655,6 +684,17 @@ public class AccountPageUI extends javax.swing.JFrame {
         sil_app.setBackground(new java.awt.Color(231, 231, 231));
         sil_app.setForeground(new java.awt.Color(118, 179, 157));
         sil_app.setText("Geri Çek");
+        sil_app.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sil_appActionPerformed(evt);
+            }
+        });
+
+        appl_info.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        appl_info.setForeground(new java.awt.Color(0, 204, 102));
+        appl_info.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        appl_info.setText("jLabel1");
+        appl_info.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -673,13 +713,16 @@ public class AccountPageUI extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(appLabel)
                             .addComponent(experinceLabel)
                             .addComponent(certifLabel)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(educationLabel)
                                 .addGap(112, 112, 112)
-                                .addComponent(error_text, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(error_text, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(appLabel)
+                                .addGap(34, 34, 34)
+                                .addComponent(appl_info, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -749,7 +792,9 @@ public class AccountPageUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(certAddButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(appLabel)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(appLabel)
+                            .addComponent(appl_info))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1129,6 +1174,38 @@ public class AccountPageUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sil_certActionPerformed
 
+    private void sil_appActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sil_appActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel applicationTable =(DefaultTableModel) appTable.getModel();
+        
+        int secili_row = appTable.getSelectedRow();
+        
+        if(secili_row == -1){
+            if(appTable.getRowCount() == 0){
+                error_text.setText("Deneyim tablosu şu anda boş!");
+            }else{
+                error_text.setText("Lutfen silinecek bir satır seçiniz!");
+            }
+        }else{
+            
+            applicationTable.removeRow(secili_row);
+            System.out.println("BUrdaaa"+getAppId(secili_row));
+            application.removeApp(conn, getAppId(secili_row));
+        }
+        
+        for(Advertisement adv: advertisementList){
+            if(applicationList.get(secili_row).getAdvId() == adv.getId()){
+                if(adv.isIsJob()){
+                    isSayisi--;
+                }else{
+                    kursSayisi--;
+                }
+            }
+        }
+        appl_info.setText(String.format("Başvurulan iş sayısı: %d Başvurulan kurs sayısı: %d", isSayisi, kursSayisi));
+        
+    }//GEN-LAST:event_sil_appActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1171,6 +1248,7 @@ public class AccountPageUI extends javax.swing.JFrame {
     private javax.swing.JLabel appLabel;
     private javax.swing.JPanel appPanel;
     private javax.swing.JTable appTable;
+    private javax.swing.JLabel appl_info;
     private javax.swing.JScrollPane cerfTable;
     private javax.swing.JScrollPane cerfTable1;
     private javax.swing.JButton certAddButton;
@@ -1245,6 +1323,33 @@ public class AccountPageUI extends javax.swing.JFrame {
                         cert.getDuration()
                 };
                 certificateTableModel.addRow(rowData);
+            }
+        }  
+    }
+
+    private void setApplicationsFields(ArrayList<Advertisement> advertisementList, ArrayList<Application> applicationList) {
+        
+        if (applicationTableModel != null) {
+            for (Advertisement adv : advertisementList) {
+                try {
+                    System.out.println("girdi\n");
+                    // Assume that the table has columns with appropriate names
+                    Date applDate = null;
+                    for(Application appl: applicationList){
+                        if(appl.getAdvId() == adv.getId()){
+                           applDate = (Date) appl.getApplicationDate();
+                        }
+                    }
+                    
+                    Object[] rowData = {
+                        adv.getTitle(),
+                        adv.getCompanyNameById(conn, adv.getCompanyId()),
+                        applDate
+                    };
+                    applicationTableModel.addRow(rowData);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AccountPageUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }  
     }

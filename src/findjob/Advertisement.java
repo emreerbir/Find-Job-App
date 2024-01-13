@@ -3,14 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package findjob;
-
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+import java.sql.ResultSetMetaData;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 /**
  *
  * @author BusraGural
@@ -22,7 +26,7 @@ public class Advertisement {
     private boolean isJob;
     private LocalDate openDate, deadlineDate;
 
-    public Advertisement(int id, int companyId, int appliedCount, String title, String description, String location, String department, String workingModel, String type, boolean isActive, boolean isJob, LocalDate openDate, LocalDate deadlineDate) {
+    public Advertisement(int id, int companyId,String title,  String description,String location,LocalDate openDate, LocalDate deadlineDate, int appliedCount,boolean isActive,boolean isJob, String type ,String department,String workingModel) {
         this.id = id;
         this.companyId = companyId;
         this.appliedCount = appliedCount;
@@ -43,10 +47,236 @@ public class Advertisement {
         
     }
     
-    public ArrayList<Advertisement> getAllJobAdvertisements(Connection conn){
-         ArrayList<Advertisement> advList = new ArrayList<>();
+    public ArrayList<Advertisement> getFilteredAdvertisements(Connection conn, boolean isJob, String location, String type, int selectedCompany, String selectedWorkType) {
+        ArrayList<Advertisement> filteredAdvertisements = new ArrayList<>();
+
+        try {
+            // Build the SQL query based on the provided filters
+            String sql = "SELECT * FROM filter_advertisements(?, ?, ?, ?, ?)";
+            System.out.println("isjob: " + isJob);
+            System.out.println("loca" + location);
+            System.out.println("type" + type);
+            System.out.println("comp " + selectedCompany);
+            System.out.println("work" + selectedWorkType);
+            
+            
+            // Prepare the statement
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                // Set parameters
+                stmt.setBoolean(1, isJob);
+                stmt.setString(2, type);
+                stmt.setInt(3, selectedCompany);
+                stmt.setString(4, location);
+                stmt.setString(5, selectedWorkType);
+
+                // Execute the query
+                try (ResultSet rs = stmt.executeQuery()) {
+                    // Check if there is a result
+                    while (rs.next()) {
+                        // Inside the while loop after getting the array result as a string
+                        String arrayResultString = rs.getString(1);
+                        System.out.println(arrayResultString);
+
+                        // Check if the result string is not null or empty
+                        if (arrayResultString != null && !arrayResultString.isEmpty()) {
+                            // Remove leading and trailing curly braces
+                            arrayResultString = arrayResultString.replaceAll("[{}\"]", "");
+
+                            // Split the string into individual elements based on parentheses
+                            String[] elements = arrayResultString.split("\\),");
+
+                            for (String element : elements) {
+                                // Remove all parentheses
+                                element = element.replaceAll("[()]", "");
+
+                                // Split values
+                                String[] values = element.split(",");
+
+                                // Additional cleanup to remove leading/trailing backslashes
+                                for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].replaceAll("^\\\\+|\\\\+$", "");
+                                }
+
+                                // Convert values to Advertisement object properties
+                                try {
+                                    Advertisement advertisement;
+
+                                    if (values.length == 13) {
+                                        // For job advertisements with 13 columns
+                                        advertisement = new Advertisement(
+                                                Integer.parseInt(values[0].trim()),
+                                                Integer.parseInt(values[1].trim()),
+                                                values[2].trim(),
+                                                values[3].trim(),
+                                                values[4].trim(),
+                                                LocalDate.parse(values[5].trim()),
+                                                LocalDate.parse(values[6].trim()),
+                                                Integer.parseInt(values[7].trim()),
+                                                Boolean.parseBoolean(values[8].trim()),
+                                                Boolean.parseBoolean(values[9].trim()),
+                                                values[10].trim(),
+                                                values[11].trim(),
+                                                values[12].trim()
+                                        );
+                                    } else if (values.length == 11) {
+                                        // For course advertisements with 11 columns
+                                        advertisement = new Advertisement(
+                                                Integer.parseInt(values[0].trim()),
+                                                Integer.parseInt(values[1].trim()),
+                                                values[2].trim(),
+                                                values[3].trim(),
+                                                values[4].trim(),
+                                                LocalDate.parse(values[5].trim()),
+                                                LocalDate.parse(values[6].trim()),
+                                                Integer.parseInt(values[7].trim()),
+                                                Boolean.parseBoolean(values[8].trim()),
+                                                Boolean.parseBoolean(values[9].trim()),
+                                                values[10].trim(),
+                                                null,
+                                                null
+                                        );
+                                    } else {
+                                        // Handle other cases or throw an exception
+                                        throw new IllegalArgumentException("Unexpected number of columns: " + values.length);
+                                    }
+
+                                    filteredAdvertisements.add(advertisement);
+                                    System.out.println(advertisement);
+                                } catch (NumberFormatException | DateTimeParseException ex) {
+                                    // Handle parsing errors gracefully
+                                    System.err.println("Error parsing values: " + Arrays.toString(values));
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your needs
+        }
+
+        return filteredAdvertisements;
+    }
+
+    public ArrayList<Advertisement> searchFilter(Connection conn, String searchKey, boolean selectedAdv) {
+        ArrayList<Advertisement> matchingAdvertisements = new ArrayList<>();
+
+        try {
+            // Assuming you have a table named 'advertisement' with a column 'title'
+            String sql = "SELECT * FROM advertisement WHERE is_active=true AND is_job = ? AND (? IS NULL OR lower(title) LIKE '%' || ? || '%')";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setBoolean(1, selectedAdv);
+                stmt.setString(2, searchKey.toLowerCase());
+                stmt.setString(3, searchKey.toLowerCase());
+                
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        int companyId = rs.getInt("company_id");
+                        int appliedCount = rs.getInt("applied_count");
+                        String title = rs.getString("title");
+                        String description = rs.getString("description");
+                        String location = rs.getString("location");
+                        String department = rs.getString("department");
+                        String workingModel = rs.getString("working_model");
+                        String type = rs.getString("type");
+                        boolean isActive = rs.getBoolean("is_active");
+                        boolean isJob = rs.getBoolean("is_job");
+                        LocalDate openDate = rs.getDate("open_date").toLocalDate();
+                        LocalDate deadlineDate = rs.getDate("deadline_date").toLocalDate();
+
+                        Advertisement advertisement = new Advertisement(id, companyId, title, description, location,
+                                openDate, deadlineDate, appliedCount, isActive, isJob, type, department, workingModel);
+
+                        matchingAdvertisements.add(advertisement);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            // Handle any SQL exceptions
+            ex.printStackTrace();
+        }
+
+        return matchingAdvertisements;
+    }
+
+    
+    
+    
+    public ArrayList<Advertisement> getAllJobAdvertisements(Connection conn) {
+        ArrayList<Advertisement> advList = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM active_job_advertisements";
+            try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Advertisement adv = new Advertisement();
+                        adv.setId(resultSet.getInt("id"));
+                        adv.setCompanyId(resultSet.getInt("company_id"));
+                        adv.setAppliedCount(resultSet.getInt("applied_count"));
+                        adv.setTitle(resultSet.getString("title"));
+                        adv.setDescription(resultSet.getString("description"));
+                        adv.setLocation(resultSet.getString("location"));
+                        adv.setDepartment(resultSet.getString("department"));
+                        adv.setWorkingModel(resultSet.getString("working_model"));
+                        adv.setType(resultSet.getString("type"));
+                        adv.setIsActive(resultSet.getBoolean("is_active"));
+                        adv.setIsJob(resultSet.getBoolean("is_job"));
+                        adv.setOpenDate(resultSet.getDate("open_date").toLocalDate());
+                        adv.setDeadlineDate(resultSet.getDate("deadline_date").toLocalDate());
+
+                        advList.add(adv);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQLException
+        }
+
         return advList;
     }
+    
+    public ArrayList<Advertisement> getAllCourseAdvertisements(Connection conn) {
+        ArrayList<Advertisement> advList = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM active_course_advertisements ";
+            try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Advertisement adv = new Advertisement();
+                        adv.setId(resultSet.getInt("id"));
+                        adv.setCompanyId(resultSet.getInt("company_id"));
+                        adv.setAppliedCount(resultSet.getInt("applied_count"));
+                        adv.setTitle(resultSet.getString("title"));
+                        adv.setDescription(resultSet.getString("description"));
+                        adv.setLocation(resultSet.getString("location"));
+                        adv.setDepartment(resultSet.getString("department"));
+                        adv.setWorkingModel(resultSet.getString("working_model"));
+                        adv.setType(resultSet.getString("type"));
+                        adv.setIsActive(resultSet.getBoolean("is_active"));
+                        adv.setIsJob(resultSet.getBoolean("is_job"));
+                        adv.setOpenDate(resultSet.getDate("open_date").toLocalDate());
+                        adv.setDeadlineDate(resultSet.getDate("deadline_date").toLocalDate());
+
+                        advList.add(adv);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQLException
+        }
+
+        return advList;
+    }
+    
+    
     
     public String getCompanyNameById(Connection conn, int companyId) throws SQLException {
         
@@ -61,7 +291,22 @@ public class Advertisement {
             }
         }
         return companyName;
-    }   
+    }  
+    
+    public int getCompanyIdByName(Connection conn, String companyName) throws SQLException {
+        int companyId = -1; // Varsayılan olarak -1, eğer bir hata olursa kontrol etmek için.
+
+        String query = "SELECT id FROM company WHERE name=?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, companyName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    companyId = resultSet.getInt("id");
+                }
+            }
+        }
+        return companyId;
+    }
     
     
     /**
@@ -244,6 +489,36 @@ public class Advertisement {
      */
     public void setIsJob(boolean isJob) {
         this.isJob = isJob;
+    }
+
+    ArrayList<Advertisement> getAdvertisementById(Connection conn, ArrayList<Application> applicationList) {
+        ArrayList<Advertisement> advertisementList = new ArrayList<>();
+            
+        String sql = "SELECT * FROM advertisement WHERE id=?";
+            
+        try (CallableStatement callableStatement = conn.prepareCall(sql)) {
+            for(Application appl: applicationList){
+                callableStatement.setInt(1, appl.getAdvId());
+                System.out.println("awawawc");
+                ResultSet resultSet = callableStatement.executeQuery();
+                while (resultSet.next()) {
+                    System.out.println("burdadada");
+                    Advertisement adv = new Advertisement();
+
+                    adv.setCompanyId(resultSet.getInt("company_id"));
+                    adv.setTitle(resultSet.getString("title"));
+                    adv.setId(resultSet.getInt("id"));
+                    adv.setIsJob(resultSet.getBoolean("is_job"));
+
+                    advertisementList.add(adv);
+                }
+            }
+            
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return advertisementList;
     }
     
 }
