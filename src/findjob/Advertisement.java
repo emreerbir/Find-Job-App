@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.ResultSetMetaData;
 import java.time.format.DateTimeParseException;
@@ -24,9 +23,9 @@ public class Advertisement {
     private String title, description, location, department, workingModel, type;
     private boolean isActive;
     private boolean isJob;
-    private LocalDate openDate, deadlineDate;
+    private Date openDate, deadlineDate;
 
-    public Advertisement(int id, int companyId,String title,  String description,String location,LocalDate openDate, LocalDate deadlineDate, int appliedCount,boolean isActive,boolean isJob, String type ,String department,String workingModel) {
+    public Advertisement(int id, int companyId,String title,  String description,String location,Date openDate, Date deadlineDate, int appliedCount,boolean isActive,boolean isJob, String type ,String department,String workingModel) {
         this.id = id;
         this.companyId = companyId;
         this.appliedCount = appliedCount;
@@ -53,11 +52,6 @@ public class Advertisement {
         try {
             // Build the SQL query based on the provided filters
             String sql = "SELECT * FROM filter_advertisements(?, ?, ?, ?, ?)";
-            System.out.println("isjob: " + isJob);
-            System.out.println("loca" + location);
-            System.out.println("type" + type);
-            System.out.println("comp " + selectedCompany);
-            System.out.println("work" + selectedWorkType);
             
             
             // Prepare the statement
@@ -70,85 +64,28 @@ public class Advertisement {
                 stmt.setString(5, selectedWorkType);
 
                 // Execute the query
-                try (ResultSet rs = stmt.executeQuery()) {
+                try (ResultSet resultSet = stmt.executeQuery()) {
                     // Check if there is a result
-                    while (rs.next()) {
-                        // Inside the while loop after getting the array result as a string
-                        String arrayResultString = rs.getString(1);
-                        System.out.println(arrayResultString);
+                    while (resultSet.next()) {
+                        Advertisement adv = new Advertisement();
+                        
+                        // Set Advertisement properties based on the result set
+                        adv.setId(resultSet.getInt("id"));
+                        adv.setCompanyId(resultSet.getInt("company_id"));
+                        adv.setAppliedCount(resultSet.getInt("applied_count"));
+                        adv.setTitle(resultSet.getString("title"));
+                        adv.setDescription(resultSet.getString("description"));
+                        adv.setLocation(resultSet.getString("location"));
+                        adv.setDepartment(resultSet.getString("department"));
+                        adv.setWorkingModel(resultSet.getString("working_model"));
+                        adv.setType(resultSet.getString("type"));
+                        adv.setIsActive(resultSet.getBoolean("is_active"));
+                        adv.setIsJob(resultSet.getBoolean("is_job"));
+                        adv.setOpenDate(resultSet.getDate("open_date"));
+                        adv.setDeadlineDate(resultSet.getDate("deadline_date"));
 
-                        // Check if the result string is not null or empty
-                        if (arrayResultString != null && !arrayResultString.isEmpty()) {
-                            // Remove leading and trailing curly braces
-                            arrayResultString = arrayResultString.replaceAll("[{}\"]", "");
-
-                            // Split the string into individual elements based on parentheses
-                            String[] elements = arrayResultString.split("\\),");
-
-                            for (String element : elements) {
-                                // Remove all parentheses
-                                element = element.replaceAll("[()]", "");
-
-                                // Split values
-                                String[] values = element.split(",");
-
-                                // Additional cleanup to remove leading/trailing backslashes
-                                for (int i = 0; i < values.length; i++) {
-                                    values[i] = values[i].replaceAll("^\\\\+|\\\\+$", "");
-                                }
-
-                                // Convert values to Advertisement object properties
-                                try {
-                                    Advertisement advertisement;
-
-                                    if (values.length == 13) {
-                                        // For job advertisements with 13 columns
-                                        advertisement = new Advertisement(
-                                                Integer.parseInt(values[0].trim()),
-                                                Integer.parseInt(values[1].trim()),
-                                                values[2].trim(),
-                                                values[3].trim(),
-                                                values[4].trim(),
-                                                LocalDate.parse(values[5].trim()),
-                                                LocalDate.parse(values[6].trim()),
-                                                Integer.parseInt(values[7].trim()),
-                                                Boolean.parseBoolean(values[8].trim()),
-                                                Boolean.parseBoolean(values[9].trim()),
-                                                values[10].trim(),
-                                                values[11].trim(),
-                                                values[12].trim()
-                                        );
-                                    } else if (values.length == 11) {
-                                        // For course advertisements with 11 columns
-                                        advertisement = new Advertisement(
-                                                Integer.parseInt(values[0].trim()),
-                                                Integer.parseInt(values[1].trim()),
-                                                values[2].trim(),
-                                                values[3].trim(),
-                                                values[4].trim(),
-                                                LocalDate.parse(values[5].trim()),
-                                                LocalDate.parse(values[6].trim()),
-                                                Integer.parseInt(values[7].trim()),
-                                                Boolean.parseBoolean(values[8].trim()),
-                                                Boolean.parseBoolean(values[9].trim()),
-                                                values[10].trim(),
-                                                null,
-                                                null
-                                        );
-                                    } else {
-                                        // Handle other cases or throw an exception
-                                        throw new IllegalArgumentException("Unexpected number of columns: " + values.length);
-                                    }
-
-                                    filteredAdvertisements.add(advertisement);
-                                    System.out.println(advertisement);
-                                } catch (NumberFormatException | DateTimeParseException ex) {
-                                    // Handle parsing errors gracefully
-                                    System.err.println("Error parsing values: " + Arrays.toString(values));
-                                }
-                            }
-                        }
-
+                        // Add Advertisement to the list
+                        filteredAdvertisements.add(adv);
                     }
                 }
             }
@@ -185,8 +122,8 @@ public class Advertisement {
                         String type = rs.getString("type");
                         boolean isActive = rs.getBoolean("is_active");
                         boolean isJob = rs.getBoolean("is_job");
-                        LocalDate openDate = rs.getDate("open_date").toLocalDate();
-                        LocalDate deadlineDate = rs.getDate("deadline_date").toLocalDate();
+                        Date openDate = rs.getDate("open_date");
+                        Date deadlineDate = rs.getDate("deadline_date");
 
                         Advertisement advertisement = new Advertisement(id, companyId, title, description, location,
                                 openDate, deadlineDate, appliedCount, isActive, isJob, type, department, workingModel);
@@ -226,8 +163,8 @@ public class Advertisement {
                         adv.setType(resultSet.getString("type"));
                         adv.setIsActive(resultSet.getBoolean("is_active"));
                         adv.setIsJob(resultSet.getBoolean("is_job"));
-                        adv.setOpenDate(resultSet.getDate("open_date").toLocalDate());
-                        adv.setDeadlineDate(resultSet.getDate("deadline_date").toLocalDate());
+                        adv.setOpenDate(resultSet.getDate("open_date"));
+                        adv.setDeadlineDate(resultSet.getDate("deadline_date"));
 
                         advList.add(adv);
                     }
@@ -261,8 +198,8 @@ public class Advertisement {
                         adv.setType(resultSet.getString("type"));
                         adv.setIsActive(resultSet.getBoolean("is_active"));
                         adv.setIsJob(resultSet.getBoolean("is_job"));
-                        adv.setOpenDate(resultSet.getDate("open_date").toLocalDate());
-                        adv.setDeadlineDate(resultSet.getDate("deadline_date").toLocalDate());
+                        adv.setOpenDate(resultSet.getDate("open_date"));
+                        adv.setDeadlineDate(resultSet.getDate("deadline_date"));
 
                         advList.add(adv);
                     }
@@ -396,28 +333,28 @@ public class Advertisement {
     /**
      * @return the openDate
      */
-    public LocalDate getOpenDate() {
+    public Date getOpenDate() {
         return openDate;
     }
 
     /**
      * @param openDate the openDate to set
      */
-    public void setOpenDate(LocalDate openDate) {
+    public void setOpenDate(Date openDate) {
         this.openDate = openDate;
     }
 
     /**
      * @return the deadlineDate
      */
-    public LocalDate getDeadlineDate() {
+    public Date getDeadlineDate() {
         return deadlineDate;
     }
 
     /**
      * @param deadlineDate the deadlineDate to set
      */
-    public void setDeadlineDate(LocalDate deadlineDate) {
+    public void setDeadlineDate(Date deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
 

@@ -133,8 +133,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="searchField" alignment="0" min="-2" pref="396" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                                       <Component id="locationLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -143,6 +142,10 @@
                                       <Component id="typeLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="typeBox" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="searchField" min="-2" pref="390" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -165,7 +168,7 @@
                                       <Component id="courseAdvButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="10" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -217,6 +220,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="SansSerif" size="14" style="1"/>
                         </Property>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="&#x130;&#x15f; &#x130;lanlar&#x131;"/>
                       </Properties>
                       <Events>
@@ -260,13 +264,12 @@
                           <Color blue="9d" green="b3" red="76" type="rgb"/>
                         </Property>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="6">
+                          <StringArray count="5">
                             <StringItem index="0" value="Hepsi"/>
                             <StringItem index="1" value="&#x130;stanbul"/>
                             <StringItem index="2" value="Ankara"/>
-                            <StringItem index="3" value="Kayseri"/>
-                            <StringItem index="4" value="&#xc7;orum"/>
-                            <StringItem index="5" value=" "/>
+                            <StringItem index="3" value="&#x130;zmir"/>
+                            <StringItem index="4" value=" "/>
                           </StringArray>
                         </Property>
                       </Properties>
@@ -327,11 +330,18 @@
                           <Color blue="9d" green="b3" red="76" type="rgb"/>
                         </Property>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="4">
+                          <StringArray count="11">
                             <StringItem index="0" value="Hepsi"/>
-                            <StringItem index="1" value="Monster"/>
-                            <StringItem index="2" value="Company4"/>
-                            <StringItem index="3" value=" "/>
+                            <StringItem index="1" value="Bilgi Teknolojileri A.&#x15e;."/>
+                            <StringItem index="2" value="FinansBankas&#x131;"/>
+                            <StringItem index="3" value="Sa&#x11f;l&#x131;k Grubu"/>
+                            <StringItem index="4" value="EduTech E&#x11f;itim Sistemleri"/>
+                            <StringItem index="5" value="AutoInnovate Otomotiv"/>
+                            <StringItem index="6" value="Hotel Paradise"/>
+                            <StringItem index="7" value="Telekom Devleri"/>
+                            <StringItem index="8" value="Perakende R&#xfc;zgar&#x131;"/>
+                            <StringItem index="9" value="Ye&#x15f;il Enerji &#x15e;irketleri"/>
+                            <StringItem index="10" value="Medya Kreatif"/>
                           </StringArray>
                         </Property>
                       </Properties>
@@ -441,7 +451,7 @@
                               <Component id="detailButton" min="-2" pref="134" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="submitButton" min="-2" pref="134" max="-2" attributes="0"/>
-                              <EmptySpace pref="58" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
@@ -499,10 +509,12 @@
                               <Color blue="39" green="37" red="28" type="rgb"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="5" rowCount="4">
+                              <Table columnCount="7" rowCount="4">
                                 <Column editable="false" title="&#x130;lan Ad&#x131;" type="java.lang.Object"/>
                                 <Column editable="false" title="Kurum Ad&#x131;" type="java.lang.Object"/>
                                 <Column editable="false" title="Konum" type="java.lang.Object"/>
+                                <Column editable="false" title="&#xc7;al&#x131;&#x15f;ma Tipi" type="java.lang.Object"/>
+                                <Column editable="false" title="T&#xfc;r" type="java.lang.Object"/>
                                 <Column editable="false" title="Biti&#x15f; Tarihi" type="java.lang.Object"/>
                                 <Column editable="false" title="Ba&#x15f;vuran Say&#x131;s&#x131;" type="java.lang.Object"/>
                               </Table>
@@ -574,7 +586,10 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Component id="submitFilterButton" alignment="0" pref="38" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="submitFilterButton" min="-2" pref="125" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -596,7 +611,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="SansSerif" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="&#x2714;"/>
+                        <Property name="text" type="java.lang.String" value="F&#x130;LTRELE &#x2714;"/>
                         <Property name="alignmentY" type="float" value="0.0"/>
                         <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                           <Insets value="[0, 0, 0, 0]"/>

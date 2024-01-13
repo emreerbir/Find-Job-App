@@ -868,6 +868,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             tmp = new Education(currentUser.getId(), uni_name_edu.getText(), dep_name_edu.getText(), Double.parseDouble(gpa_edu.getText()), startDateSql, endDateSql);
             
             education.updateEducationDetails(conn, currentUser.getId(), tmp, getEduId(secili_row));
+            
+            educationList = education.getEducationList(conn, currentUser.getId());
         }
     }//GEN-LAST:event_eduEditButtonActionPerformed
     
@@ -905,6 +907,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             tmp = new Experience(currentUser.getId(), comp_name_exp.getText(), dep_name_exp.getText(), job_name_exp.getText(), startDateSql, endDateSql);
             
             experience.updateExperienceDetails(conn, currentUser.getId(), tmp, getExpId(secili_row));
+            
+            experienceList = experience.getExperienceList(conn, currentUser.getId());
         }
         
     }//GEN-LAST:event_expEditButtonActionPerformed
@@ -937,6 +941,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             tmp = new Certificate(currentUser.getId(), cert_name.getText(), cert_comp.getText(), validityPerCert, getDateSql);
             
             certificate.updateCertificateDetails(conn, currentUser.getId(), tmp, getCertId(secili_row));
+            
+            certificateList = certificate.getCertificateList(conn, currentUser.getId());
         }
     }//GEN-LAST:event_certEditButtonActionPerformed
 
@@ -962,6 +968,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             
             education.addEducation(conn, currentUser.getId(), tmp);
             error_text.setText("Eğitim bilgisi başarıyla eklendi!");
+            
+            educationList = education.getEducationList(conn, currentUser.getId());
         }
         
        
@@ -989,6 +997,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             
             experience.addExperience(conn, currentUser.getId(), tmp);
             
+            experienceList = experience.getExperienceList(conn, currentUser.getId());
+            
         }
     }//GEN-LAST:event_expAddButtonActionPerformed
 
@@ -1012,6 +1022,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             
             certificate.addCertificate(conn, currentUser.getId(), tmp);
             
+            certificateList = certificate.getCertificateList(conn, currentUser.getId());
         }
         
     }//GEN-LAST:event_certAddButtonActionPerformed
@@ -1129,6 +1140,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             education.removeEdu(conn, getEduId(secili_row));
         }
         
+        educationList = education.getEducationList(conn, currentUser.getId());
     }//GEN-LAST:event_sil_eduActionPerformed
 
     private void sil_expActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sil_expActionPerformed
@@ -1149,6 +1161,8 @@ public class AccountPageUI extends javax.swing.JFrame {
            
             
             experience.removeExp(conn, getExpId(secili_row));
+            
+            experienceList = experience.getExperienceList(conn, currentUser.getId());
         }
         
     }//GEN-LAST:event_sil_expActionPerformed
@@ -1171,6 +1185,8 @@ public class AccountPageUI extends javax.swing.JFrame {
            
             System.out.println("silinmek icin gelen cert ıd: "+getCertId(secili_row));
             certificate.removeCert(conn, getCertId(secili_row));
+            
+            certificateList = certificate.getCertificateList(conn, currentUser.getId());
         }
     }//GEN-LAST:event_sil_certActionPerformed
 
@@ -1191,6 +1207,9 @@ public class AccountPageUI extends javax.swing.JFrame {
             applicationTable.removeRow(secili_row);
             System.out.println("BUrdaaa"+getAppId(secili_row));
             application.removeApp(conn, getAppId(secili_row));
+            
+            applicationList = application.getAppAdv(conn, currentUser.getId());
+            advertisementList = advertisement.getAdvertisementById(conn, applicationList);
         }
         
         for(Advertisement adv: advertisementList){

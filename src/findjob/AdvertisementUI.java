@@ -47,8 +47,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         Helpers.enableTextFields(imagePanel);
         Helpers.disableTableFields(advTable);
         
-        advJobTableModel = new DefaultTableModel(new Object[]{"İlan Adı", "Kurum Adı", "Konum", "Bitiş Tarihi", "Başvuran Sayısı"}, 0);
-        advTable.setModel(advJobTableModel);
+        advJobTableModel = (DefaultTableModel) advTable.getModel();
         
         filteredAdvertisements = adv.getAllJobAdvertisements(conn);
         setjobAdvertisementFields(filteredAdvertisements);
@@ -108,6 +107,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         jobAdvButton.setBackground(new java.awt.Color(118, 179, 157));
         buttonGroup2.add(jobAdvButton);
         jobAdvButton.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jobAdvButton.setSelected(true);
         jobAdvButton.setText("İş İlanları");
         jobAdvButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +131,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         locationBox.setBackground(new java.awt.Color(221, 221, 221));
         locationBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         locationBox.setForeground(new java.awt.Color(118, 179, 157));
-        locationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "İstanbul", "Ankara", "Kayseri", "Çorum", " " }));
+        locationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "İstanbul", "Ankara", "İzmir", " " }));
 
         typeBox.setBackground(new java.awt.Color(221, 221, 221));
         typeBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -147,7 +147,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         companyNameBox.setBackground(new java.awt.Color(221, 221, 221));
         companyNameBox.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         companyNameBox.setForeground(new java.awt.Color(118, 179, 157));
-        companyNameBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "Monster", "Company4", " " }));
+        companyNameBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hepsi", "Bilgi Teknolojileri A.Ş.", "FinansBankası", "Sağlık Grubu", "EduTech Eğitim Sistemleri", "AutoInnovate Otomotiv", "Hotel Paradise", "Telekom Devleri", "Perakende Rüzgarı", "Yeşil Enerji Şirketleri", "Medya Kreatif" }));
 
         searchField.setBackground(new java.awt.Color(231, 231, 231));
         searchField.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
@@ -178,7 +178,6 @@ public class AdvertisementUI extends javax.swing.JFrame {
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(imagePanelLayout.createSequentialGroup()
                 .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(imagePanelLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(locationLabel)
@@ -187,7 +186,10 @@ public class AdvertisementUI extends javax.swing.JFrame {
                         .addGap(54, 54, 54)
                         .addComponent(typeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(typeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(imagePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(imagePanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -205,7 +207,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
                         .addComponent(jobAdvButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(courseAdvButton)))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         imagePanelLayout.setVerticalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,17 +258,17 @@ public class AdvertisementUI extends javax.swing.JFrame {
         advTable.setForeground(new java.awt.Color(40, 55, 57));
         advTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "İlan Adı", "Kurum Adı", "Konum", "Bitiş Tarihi", "Başvuran Sayısı"
+                "İlan Adı", "Kurum Adı", "Konum", "Çalışma Tipi", "Tür", "Bitiş Tarihi", "Başvuran Sayısı"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -294,7 +296,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
                 .addComponent(detailButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jobAdvPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2)
@@ -316,7 +318,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
 
         submitFilterButton.setBackground(new java.awt.Color(118, 179, 157));
         submitFilterButton.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        submitFilterButton.setText("✔");
+        submitFilterButton.setText("FİLTRELE ✔");
         submitFilterButton.setAlignmentY(0.0F);
         submitFilterButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         submitFilterButton.addActionListener(new java.awt.event.ActionListener() {
@@ -331,7 +333,9 @@ public class AdvertisementUI extends javax.swing.JFrame {
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
             .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(submitFilterButton, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(submitFilterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -448,10 +452,13 @@ public class AdvertisementUI extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(AdvertisementUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Burda burad alaaa" + adv.getType());
             Object[] row = {
                     adv.getTitle(),
                     name, // Assuming there is a method like getCompanyName() in Advertisement class
                     adv.getLocation(),
+                    adv.getWorkingModel(),
+                    adv.getType(),
                     adv.getDeadlineDate(), // Assuming getDeadlineDate() returns a formatted date
                     adv.getAppliedCount()
             };
@@ -493,7 +500,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
                 System.out.println(selectedWorkType);
 
 
-                if(selectedCompany.compareTo("Hepsi") == 0 && selectedLocation.compareTo("Hepsi") == 0  && selectedType.compareTo("Hepsi") == 0 ){
+                if(selectedCompany.compareTo("Hepsi") == 0 && selectedLocation.compareTo("Hepsi") == 0  && selectedType.compareTo("Hepsi") == 0 && selectedWorkType.compareTo("Hepsi") == 0){
                     if(advSelected ){
                         filteredAdvertisements = adv.getAllJobAdvertisements(conn);
                         setjobAdvertisementFields(filteredAdvertisements);
@@ -518,8 +525,10 @@ public class AdvertisementUI extends javax.swing.JFrame {
                     if("Hepsi".equals(selectedWorkType)){
                         selectedWorkType = null;
                     }
+                    
+                    System.out.println(advSelected+ selectedType + id + selectedLocation + selectedWorkType);
 
-
+                    System.out.println("bruashdsauhdas   "+selectedWorkType);
                     filteredAdvertisements = adv.getFilteredAdvertisements(conn, advSelected, selectedLocation, selectedType, id, selectedWorkType);
                     setjobAdvertisementFields(filteredAdvertisements);
                 }
@@ -560,9 +569,7 @@ public class AdvertisementUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String[] newItems = {"Hepsi","Online", "Yüzyüze"};
         typeBox.setModel(new DefaultComboBoxModel<>(newItems));
-        workTypeBox.setEnabled(false);
-        
-        
+        workTypeBox.setEnabled(false);        
     }//GEN-LAST:event_courseAdvButtonActionPerformed
 
     private void detailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailButtonActionPerformed
