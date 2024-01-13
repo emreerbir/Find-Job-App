@@ -45,7 +45,7 @@ public class User {
     
    
     
-    public int register(Connection conn, User user) {
+    public int register(Connection conn, User user) throws SQLException {
        int userId = -1; // Varsayılan olarak -1, işlem başarısız olursa bu değer kullanılacaktır
 
        try {
@@ -78,6 +78,7 @@ public class User {
            }
        } catch (SQLException e) {
            e.printStackTrace();
+           throw e;
        }
 
        return userId;
@@ -127,32 +128,7 @@ public class User {
     }
      
     public void checkEducationTable(Connection conn, int userId) {
-        try {
-//            // Check if the education table exists
-//            DatabaseMetaData metaData = conn.getMetaData();
-//            ResultSet resultSet = metaData.getTables(null, null, "education", null);
-//
-//            if (!resultSet.next()) {
-//                // If the table doesn't exist, create it
-//                String createTableQuery = "CREATE TABLE education ("
-//                        + "id SERIAL PRIMARY KEY NOT NULL,"
-//                        + "user_id INT REFERENCES Users(id),"
-//                        + "school_name VARCHAR(255) NOT NULL,"
-//                        + "department VARCHAR(255) NOT NULL,"
-//                        + "start_date DATE NOT NULL,"
-//                        + "finish_date DATE NOT NULL,"
-//                        + "grade NUMERIC(3,2))";
-//
-//                try (Statement stmt = conn.createStatement()) {
-//                    stmt.executeUpdate(createTableQuery);
-//
-//                    System.out.println("Education table created successfully!");
-//                }
-//            } else {
-//                System.out.println("Education table already exists.");
-//            }
-
-            // Insert user_id into the Education table
+        /*try {
             String insertUserIdQuery = "INSERT INTO Education (user_id, school_name, department, start_date, finish_date, grade) VALUES (?, 'Default School','Default Department' , '2022-01-01', '2023-01-01', 0.0)";
             try (PreparedStatement preparedStatement = conn.prepareStatement(insertUserIdQuery)) {
                 preparedStatement.setInt(1, userId);
@@ -168,34 +144,13 @@ public class User {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
 
     public void checkExperienceTable(Connection conn, int userId) {
-        try {
-//            DatabaseMetaData metaData = conn.getMetaData();
-//            ResultSet resultSet = metaData.getTables(null, null, "experience", null);
-//
-//            if (!resultSet.next()) {
-//                // If the table doesn't exist, create it
-//                String createTableQuery = "CREATE TABLE Experience("
-//                        + "id SERIAL PRIMARY KEY NOT NULL,"
-//                        + "user_id INT REFERENCES Users(id),"
-//                        + "company_id INT REFERENCES company(id) ,"
-//                        + "job_name VARCHAR(50) NOT NULL,"
-//                        + "start_date DATE NOT NULL,"
-//                        + "finish_date DATE NOT NULL,"
-//                        + "department VARCHAR(50) NOT NULL)";
-//                try (Statement stmt = conn.createStatement()) {
-//                    stmt.executeUpdate(createTableQuery);
-//                    System.out.println("Experience table created successfully!");
-//                }
-//            } else {
-//                System.out.println("Experience table already exists.");
-//            }
-
+        /*try {
             // Insert user_id into the Experience table
             String insertUserIdQuery = "INSERT INTO Experience (user_id, company_id, job_title, start_date, finish_date, department) VALUES (?, 0, 'default' , '2022-01-01', '2023-01-01', 'Default Department')";
             try (PreparedStatement preparedStatement = conn.prepareStatement(insertUserIdQuery)) {
@@ -217,32 +172,12 @@ public class User {
             } else {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     
 public void checkCertificateTable(Connection conn, int userId) {
-    try {
-//        DatabaseMetaData metaData = conn.getMetaData();
-//        ResultSet resultSet = metaData.getTables(null, null, "certificate", null);
-//
-//        if (!resultSet.next()) {
-//            // If the table doesn't exist, create it
-//            String createTableQuery = "CREATE TABLE Certificate("
-//                    + "id SERIAL PRIMARY KEY NOT NULL,"
-//                    + "user_id INT REFERENCES Users(id),"
-//                    + "certif_name VARCHAR(50),"
-//                    + "receipt_date DATE NOT NULL,"
-//                    + "company_id INT REFERENCES company(id) ,"
-//                    + "duration INT NOT NULL)";
-//            try (Statement stmt = conn.createStatement()) {
-//                stmt.executeUpdate(createTableQuery);
-//                System.out.println("Certificate table created successfully!");
-//            }
-//        } else {
-//            System.out.println("Certificate table already exists.");
-//        }
-
+    /*try {
         // Insert user_id into the Certificate table
         String insertUserIdQuery = "INSERT INTO Certificate (user_id, certification_name, receipt_date, company_id, duration) VALUES (?, 'Default Certificate', '2022-01-01', 0, 0)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(insertUserIdQuery)) {
@@ -264,7 +199,7 @@ public void checkCertificateTable(Connection conn, int userId) {
         } else {
             e.printStackTrace();
         }
-    }
+    }*/
 }
 
 
