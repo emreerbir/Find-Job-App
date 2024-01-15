@@ -28,7 +28,7 @@ After completing these steps, you can run the application by following the steps
 
 That's it! Now you can use your job search application. Good luck!
 
-## More Information on Java Swing, PostgreSQL an SQL
+## More Information on Java Swing, PostgreSQL and SQL
 
 - [Java Swing Documentation](https://docs.oracle.com/javase/tutorial/uiswing/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
