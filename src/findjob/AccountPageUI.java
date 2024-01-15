@@ -961,7 +961,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             java.sql.Date endDateSql = new java.sql.Date(endDateUtil.getTime());
             
             Object[] eklenecek = {uni_name_edu.getText(), dep_name_edu.getText(), gpa_edu.getText(), startDateSql, endDateSql};
-            educationTable.addRow(eklenecek);
+            //educationTable.addRow(eklenecek);
             
             Education tmp;
             tmp = new Education(currentUser.getId(), uni_name_edu.getText(), dep_name_edu.getText(), Double.parseDouble(gpa_edu.getText()), startDateSql, endDateSql);
@@ -970,6 +970,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             error_text.setText("Eğitim bilgisi başarıyla eklendi!");
             
             educationList = education.getEducationList(conn, currentUser.getId());
+            setEducationFields(educationList);
         }
         
        
@@ -989,8 +990,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             java.util.Date endDateUtil = end_date_exp.getDate();
             java.sql.Date endDateSql = new java.sql.Date(endDateUtil.getTime());
             
-            Object[] eklenecek = {comp_name_exp.getText(), dep_name_exp.getText(), job_name_exp.getText(), startDateSql, endDateSql};
-            experienceTable.addRow(eklenecek);
+            //Object[] eklenecek = {comp_name_exp.getText(), dep_name_exp.getText(), job_name_exp.getText(), startDateSql, endDateSql};
+            //experienceTable.addRow(eklenecek);
             
             Experience tmp;
             tmp = new Experience(currentUser.getId(), comp_name_exp.getText(), dep_name_exp.getText(), job_name_exp.getText(), startDateSql, endDateSql);
@@ -998,7 +999,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             experience.addExperience(conn, currentUser.getId(), tmp);
             
             experienceList = experience.getExperienceList(conn, currentUser.getId());
-            
+            setExperienceFields(experienceList);
         }
     }//GEN-LAST:event_expAddButtonActionPerformed
 
@@ -1013,8 +1014,8 @@ public class AccountPageUI extends javax.swing.JFrame {
             java.util.Date startDateUtil = get_date_cert.getDate();
             java.sql.Date getDateSql = new java.sql.Date(startDateUtil.getTime());
             
-            Object[] eklenecek = {cert_name.getText(), cert_comp.getText(), getDateSql, validity_per_cert.getText()};
-            certificateTable.addRow(eklenecek);
+            //Object[] eklenecek = {cert_name.getText(), cert_comp.getText(), getDateSql, validity_per_cert.getText()};
+            //certificateTable.addRow(eklenecek);
             
             int validityPerCert = Integer.parseInt(validity_per_cert.getText());
             Certificate tmp;
@@ -1023,6 +1024,7 @@ public class AccountPageUI extends javax.swing.JFrame {
             certificate.addCertificate(conn, currentUser.getId(), tmp);
             
             certificateList = certificate.getCertificateList(conn, currentUser.getId());
+            setCertificateFields(certificateList);
         }
         
     }//GEN-LAST:event_certAddButtonActionPerformed
